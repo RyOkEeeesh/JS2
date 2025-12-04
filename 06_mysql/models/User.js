@@ -5,7 +5,8 @@ export const fetchAll = async (limit = 20) => {
     // TODO: SQL 文
     // 1) users 取得、
     // 2) 指定した limit で件数制限
-    const sql = ``;
+    // ? はプレースホルダー：何軒になるか不明な値を後でいれる記号
+    const sql = `SELECT * FROM users LIMIT ?`;
     // SQL 実行
     const [rows] = await pool.query(sql, [limit]);
     // 結果返却
@@ -19,7 +20,7 @@ export const fetchAll = async (limit = 20) => {
 export const find = async (id) => {
     // TODO: SQL 文
     // users テーブルから id 指定で取得
-    const sql = ``;
+    const sql = `SELECT * FROM users WHERE id = ?;`;
     // SQL 実行
     const [rows] = await pool.query(sql, [id]);
     // 結果返却 JSON
@@ -93,7 +94,9 @@ export const update = async (id, posts) => {
         // TODO: SQL 文
         // 1) UPDATE 文で users の name, email を更新
         // 2) users.id で検索
-        const sql = ``;
+        const sql = `UPDATE users
+                        SET name = ?, email = ?
+                        WHERE id = ?;`;
         // SQL 実行
         const params = [name, email, id];
         const [rows] = await pool.query(sql, params);

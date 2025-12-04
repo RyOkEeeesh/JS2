@@ -4,8 +4,14 @@ export const fetchAll = async (limit = 20) => {
     // TODO: SQL 文
     // 1) feeds と users テーブルを結合
     // 2) feeds と users.user_nameを取得
-    // 3) created_at の降順で取得
-    const sql = ``
+    // 3) created_at の降順(DESC)で取得
+    // 4) limit 件数分だけ取得
+    const sql = `SELECT feeds.*, users.name AS user_name 
+                    FROM feeds
+                    JOIN users ON feeds.user_id = users.id
+                    ORDER BY feeds.created_at DESC
+                    LIMIT ?
+                    ;`
     // SQL 実行
     const [feeds] = await pool.query(sql, [limit]);
     // 結果返却
@@ -34,7 +40,10 @@ export const insert = async (posts) => {
         const { user_id, content } = posts;
         // TODO: SQL 文
         // feeds テーブルに user_id, content を挿入
-        const sql = '';
+        // バッククォーとで囲む
+        const sql = `INSERT INTO feeds
+                        (user_id, content)
+                        VALUES (?, ?);`;
         // SQL 実行
         const params = [user_id, content];
         const [rows] = await pool.query(sql, params);
@@ -82,7 +91,8 @@ export const insertInjection = async (posts) => {
 export const destroy = async (id) => {
     try {
         // TODO: SQL 文
-        const sql = '';
+        // バッククォーとで囲む
+        const sql = 'DELETE FROM feeds WHERE id = ?;';
         const params = [id];
         const result = await pool.query(sql, params);
         const data = {
