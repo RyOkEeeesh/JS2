@@ -35,26 +35,22 @@ async function buildJS() {
   });
 
   await ctx.watch();
-  ctx.rebuild().then(() => buildCSS().catch(console.error));
   return ctx;
 }
 
-// function watchCSSFiles() {
-//   fs.watch(env.in.dir, { recursive: true }, async (_, filename) => {
-//     if (!filename) return;
-//     if (/\.(ts|tsx|css)$/.test(filename)) {
-//       try {
-//         console.log("Rebuilding CSS...");
-//         await buildCSS();
-//       } catch (e) {
-//         console.error(e);
-//       }
-//     }
-//   });
-// }
-
-export async function build() {
-  await buildCSS();
-  await buildJS();
-  // watchCSSFiles();
+function watchCSSFiles() {
+  fs.watch(env.in.dir, { recursive: true }, async (_, filename) => {
+    if (!filename) return;
+    if (/\.(ts|tsx|css)$/.test(filename)) {
+      try {
+        await buildCSS();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  });
 }
+
+await buildCSS();
+await buildJS();
+watchCSSFiles();

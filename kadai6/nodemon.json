@@ -1,6 +1,12 @@
 {
-  "watch": ["dist"],
-  "ext": "js,css",
+  "quiet": true,
+  "watch": ["src"],
+  "ignore": [
+    "client.tsx",
+    "layout.tsx",
+    "build.ts"
+  ],
+  "ext": "ts,tsx",
   "exec": "tsx src/main.tsx",
-  "delay": "200"
+  "delay": "0"
 }
