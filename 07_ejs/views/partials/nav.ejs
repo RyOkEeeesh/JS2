@@ -1,0 +1,41 @@
+<nav class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-20 items-center">
+
+            <div class="flex items-center gap-8">
+                <a href="/" class="flex items-center gap-2">
+                    <span class="font-bold text-2xl tracking-tight text-slate-900">
+                        <!-- ミドルウェアで設定した siteTitle を表示 -->
+                        サイトタイトル
+                    </span>
+                </a>
+
+                <div class="hidden md:block">
+                    <ul class="flex gap-6">
+                        <li><a href="/channels" class="text-gray-500 hover:text-sky-600 transition-colors font-medium">Video Channel</a></li>
+                        <li><a href="/products" class="text-gray-500 hover:text-sky-600 transition-colors font-medium">Products</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 pr-4">
+                    <button class="p-2 text-gray-500 hover:text-sky-600 transition-colors">
+                        <img src="/svg/search-btn.svg" alt="Search Button" class="w-6 h-6">
+                    </button>
+                    <a href="/cart" class="p-2 text-gray-500 hover:text-sky-600 transition-colors relative">
+                        <img src="/svg/cart-btn.svg" alt="Cart Button" class="w-6 h-6">
+                        <!-- TODO: cartCount があれば表示 -->
+                        <span class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-pink-500 text-[10px] text-white ring-2 ring-white">
+                        </span>
+                    </a>
+                </div>
+
+                <button class="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500">
+                    <img src="/svg/hamburger-btn.svg" alt="Menu Button" class="w-6 h-6">
+                </button>
+            </div>
+
+        </div>
+    </div>
+</nav>

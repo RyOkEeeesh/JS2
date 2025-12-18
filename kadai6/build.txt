@@ -1,3 +1,0 @@
-clientビルド
-
-deno bundle --outdir dist src/client.tsx

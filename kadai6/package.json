@@ -1,12 +1,21 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "node src/main.js" 
+    "dev": "npx tsx src/main.tsx"
   },
   "dependencies": {
     "express": "^5.2.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "tailwindcss": "^4.1.18"
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/express": "^4.17.25",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "esbuild": "^0.27.2",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "tsx": "^4.21.0"
   }
 }

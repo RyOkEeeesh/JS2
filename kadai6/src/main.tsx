@@ -1,16 +1,13 @@
 import express from 'express';
-import path from 'node:path'
-import { fileURLToPath } from "node:url";
+import path from 'path'
 import ReactDOMServer from 'react-dom/server';
-import App from '@/app.tsx';
-import Layout from '@/layout.tsx';
-import { buildClient } from '@/build.ts';
+import App from './app';
+import Layout from './layout';
+import { buildClient } from './build';
 
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.use("/", express.static(path.join(__dirname, "dist")));
+app.use(express.static(path.resolve("./dist")));
 
 app.get('/', (_req, res) => {
   const html = ReactDOMServer.renderToString(<Layout><App /></Layout>);

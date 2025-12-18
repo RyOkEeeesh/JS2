@@ -1,13 +1,19 @@
-import { build } from "esbuild/mod.js";
-import { exec } from "exec/mod.ts";
+import esbuild from "esbuild";
+import fs from "fs";
+import path from "path";
+import postcss from "postcss";
+import tailwind from "@tailwindcss/postcss";
 
 export async function buildClient() {
-
-  await build({
+  await esbuild.build({
     entryPoints: ["src/client.tsx"],
     bundle: true,
-    outfile: "/dist/bundle.js",
+    outfile: path.resolve("dist/script.js"),
   });
 
-  await exec("npx tailwindcss -i src/index.css -o /dist/output.css --minify");
+  const css = fs.readFileSync("src/index.css", "utf8");
+  const result = await postcss([tailwind({})]).process(css, { from: "src/index.css" });
+
+  fs.mkdirSync("dist", { recursive: true });
+  fs.writeFileSync("dist/style.css", result.css);
 }
