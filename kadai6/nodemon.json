@@ -1,0 +1,6 @@
+{
+  "watch": ["dist"],
+  "ext": "js,css",
+  "exec": "tsx src/main.tsx",
+  "delay": "200"
+}
