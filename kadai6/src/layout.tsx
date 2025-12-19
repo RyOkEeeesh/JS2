@@ -1,21 +1,6 @@
 import { env } from "../env";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const reloadScript = `
-    const eventSource = new EventSource('/reload-stream');
-    eventSource.onmessage = (event) => {
-      if (event.data === 'reload') {
-        window.location.reload();
-      }
-    };
-    // エラー（サーバー停止時など）が起きたら数秒後に再接続を試みる設定
-    eventSource.onerror = () => {
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    };
-  `;
-
   return (
     <html lang="ja">
       <head>
@@ -27,9 +12,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <div id="root">{children}</div>
-        <script
-          dangerouslySetInnerHTML={{ __html: reloadScript }}
-        />
       </body>
     </html>
   );

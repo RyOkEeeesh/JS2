@@ -4,26 +4,28 @@ import ReactDOMServer from 'react-dom/server';
 import App from './app';
 import Layout from './layout';
 import { env } from '../env';
+import livereload from 'livereload';
+import connectLiveReload from 'connect-livereload';
 
+const STATIC = path.resolve(`./${env.out.dir}`);
 const app = express();
 
-app.use(express.static(path.resolve(`./${env.out.dir}`)));
+const liveReloadServer = livereload.createServer();
+liveReloadServer.watch(STATIC);
 
-app.get('/', (_req, res) => {
+app.use(connectLiveReload());
+app.use(express.static(STATIC));
+
+app.get('/', (_, res) => {
   const html = ReactDOMServer.renderToString(<Layout><App /></Layout>);
-  res.send(html);
+  res.setHeader('Content-Type', 'text/html');
+  res.send(`<!DOCTYPE html>${html}`);
 });
 
-let clients: any[] = [];
-
-app.get('/reload-stream', (req, res) => {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  clients.push(res);
-  req.on('close', () => {
-    clients = clients.filter(client => client !== res);
-  });
+liveReloadServer.server.once("connection", () => {
+  setTimeout(() => {
+    liveReloadServer.refresh("/");
+  }, 100);
 });
 
 app.listen(3000, () => console.log('http://localhost:3000'));
