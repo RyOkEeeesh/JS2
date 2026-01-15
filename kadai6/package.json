@@ -1,9 +1,10 @@
 {
   "type": "module",
   "scripts": {
-    "dev:build": "tsx src/build.ts",
+    "dev:build": "tsx build.dev.ts",
     "dev:server": "nodemon",
-    "dev": "concurrently \"npm:dev:build\" \"npm:dev:server\""
+    "dev": "concurrently \"npm:dev:build\" \"npm:dev:server\"",
+    "start": "tsx server.tsx"
   },
   "dependencies": {
     "express": "^5.2.1",

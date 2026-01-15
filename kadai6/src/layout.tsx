@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href={`/${env.out.css}`} />
-        <title>JS23 課題6</title>
+        <title>{env.title ?? 'Document'}</title>
         <script type="module" src={`/${env.out.js}`} defer />
       </head>
       <body>

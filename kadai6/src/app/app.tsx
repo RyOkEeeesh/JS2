@@ -6,7 +6,7 @@ export default function App() {
     <div className="h-screen w-screen flex items-center justify-center flex-col">
       <button type="button" className="border" onClick={() => setClick(s => s + 1)}>クリック</button>
       <p>{click}</p>
-      <p className='text-amber-800'>隣の客はよく柿食う客だ</p>
+      <p className='text-amber-800'>さしすｘ</p>
     </div>
   )
 }

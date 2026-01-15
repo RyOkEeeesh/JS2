@@ -7,6 +7,6 @@
     "build.ts"
   ],
   "ext": "ts,tsx",
-  "exec": "tsx src/main.tsx",
+  "exec": "tsx server.dev.tsx",
   "delay": "0"
 }

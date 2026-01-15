@@ -1,9 +1,9 @@
 import express from 'express';
 import path from 'path';
 import ReactDOMServer from 'react-dom/server';
-import App from './app';
-import Layout from './layout';
-import { env } from '../env';
+import App from './src/app/app';
+import Layout from './src/layout';
+import { env } from './env';
 import livereload from 'livereload';
 import connectLiveReload from 'connect-livereload';
 
@@ -28,4 +28,4 @@ liveReloadServer.server.once("connection", () => {
   }, 100);
 });
 
-app.listen(3000, () => console.log('http://localhost:3000'));
+app.listen(env.port, () => console.log(`http://localhost:${env.port}`));
