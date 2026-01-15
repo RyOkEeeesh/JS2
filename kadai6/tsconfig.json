@@ -6,6 +6,11 @@
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "lib": ["dom", "esnext"],
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "env": ["./env.ts"]
+    }
   }
 }

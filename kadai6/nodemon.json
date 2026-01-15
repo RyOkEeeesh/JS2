@@ -4,9 +4,9 @@
   "ignore": [
     "client.tsx",
     "layout.tsx",
-    "build.ts"
+    "build/*"
   ],
   "ext": "ts,tsx",
-  "exec": "tsx server.dev.tsx",
+  "exec": "tsx src/api/server.dev.tsx",
   "delay": "0"
 }

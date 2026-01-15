@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import postcss from 'postcss';
 import tailwind from '@tailwindcss/postcss';
-import { env } from './env';
+import { env } from 'env';
 
 const IN = {
   tsx: `${env.in.dir}/${env.in.tsx}`,
@@ -23,7 +23,7 @@ export async function buildCSS() {
   fs.writeFileSync(OUT.css, result.css);
 }
 
-export async function buildJS() {
+export async function getCtxBuildJS() {
   const ctx = await esbuild.context({
     entryPoints: [IN.tsx],
     bundle: true,
@@ -37,7 +37,7 @@ export async function buildJS() {
 }
 
 export async function watchJS() {
-  const ctx = await buildJS();
+  const ctx = await getCtxBuildJS();
   await ctx.watch();
   return ctx;
 }
