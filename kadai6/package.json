@@ -7,6 +7,7 @@
     "start": "tsx src/api/server.tsx"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "express": "^5.2.1",
     "fast-glob": "^3.3.3",
     "react": "^18.3.1",
