@@ -1,107 +1,247 @@
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import {
+  intToIpv4,
+  IP_MAX,
+  ipv4ToInt,
+  isIpv4,
+  isMask,
+  lenFromMask,
+  maskFromLen,
+  networkFromIpMask,
+} from './ipUtils';
+import { Input, Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/react';
+import { CheckIcon, ChevronDownIcon, SlashIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
-import { useCallback, useRef, useState } from 'react';
 
-const VERTICAL_BAR = '│';
-const BRANCH_BAR = '├';
-const FIN_BRANCH_BAR = '└';
-const HORIZONTAL_BAR = '─';
+type IntIPv4 = number | null;
 
-type DropAreaProps = {
-  setFiles: React.Dispatch<React.SetStateAction<any[]>>;
+function useIpv4State() {
+  const [ip, setI] = useState<IntIPv4>(null);
+  const [mask, setM] = useState<IntIPv4>(null);
+  function setIp(i: IntIPv4) {
+    if (ip !== i) setI(i);
+  }
+  function setMask(m: IntIPv4) {
+    if (mask !== m) setM(m !== null && isMask(m) ? m : null);
+  }
+  return { ip, mask, setIp, setMask };
 }
 
-const useFolderDrop = (onFilesLoaded, onError) => {
-  const traverseEntry = useCallback(async (entry) => {
-    const files = [];
-    
-    const internalSearch = async (item) => {
-      if (item.isFile) {
-        const file = await new Promise(resolve => {
-          item.file(f => {
-            // 元のロジック同様、相対パスを保持
-            Object.defineProperty(f, "webkitRelativePath", {
-              value: item.fullPath.slice(1),
-            });
-            resolve(f);
-          });
-        });
-        files.push(file);
-      } else if (item.isDirectory) {
-        const reader = item.createReader();
-        const readAll = async () => {
-          const entries = await new Promise(resolve => reader.readEntries(resolve));
-          if (entries.length > 0) {
-            for (const entry of entries) await internalSearch(entry);
-            await readAll();
-          }
-        };
-        await readAll();
-      }
-    };
-
-    await internalSearch(entry);
-    return files;
-  }, []);
-
-  const handleDrop = useCallback(async (event) => {
-    event.preventDefault();
-    const items = Array.from(event.dataTransfer.items);
-    const entries = items.map(item => item.webkitGetAsEntry());
-
-    const files = entries.filter(e => e?.isFile);
-    const directories = entries.filter(e => e?.isDirectory);
-
-    if (directories.length === 1 && files.length === 0) {
-      const allFiles = await traverseEntry(directories[0]);
-      onFilesLoaded(allFiles);
-    } else {
-      onError('投稿ファイルの入ったフォルダを1つドラッグアンドドロップしてください');
-    }
-  }, [traverseEntry, onFilesLoaded, onError]);
-
-  return { handleDrop };
+type TextInputProps = {
+  label: string;
+  placeholder?: string;
+  ip: IntIPv4;
+  setIp: (v: IntIPv4) => void;
+  children?: React.ReactNode;
+  className?: string;
 };
 
-function DropArea({setFiles}: DropAreaProps) {
-  const [isDrag, setIsDrag] = useState<boolean>(false);
-  const { handleDrop } = useFolderDrop(
-    (files) => {
-      setFiles(files);
-      console.log("読み込んだファイル:", files);
-    },
-    (error) => alert(error)
-  );
+function TextInput({
+  label,
+  placeholder,
+  ip,
+  setIp,
+  children,
+  className,
+}: TextInputProps) {
+  const [value, setValue] = useState('');
+  const isInternalRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (ip === null) {
+      if (!isInternalRef.current) setValue('');
+    } else {
+      setValue(intToIpv4(ip));
+    }
+    isInternalRef.current = false;
+  }, [ip]);
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const t = e.target.value;
+    isInternalRef.current = true;
+    setValue(t);
+    setIp(isIpv4(t) ? ipv4ToInt(t) : null);
+  }
+
+  const generatedId = useId();
+
   return (
-    <div
-      className={clsx("w-[50vw] h-screen border", isDrag ? 'drag' : 'leave')}
-      onDragEnter={e => {
-        e.preventDefault();
-        setIsDrag(true);
-      }}
-      onDragLeave={e => {
-        e.preventDefault();
-        setIsDrag(false);
-      }}
-      onDragOver={e => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'copy';
-      }}
-      onDrop={handleDrop}
-    >
+    <>
+      <label className='block' htmlFor={generatedId}>
+        {label}
+      </label>
+      <div className='input-wrap'>
+        <Input
+          type='text'
+          autoComplete='off'
+          className={clsx(className, 'outline-none bg-transparent', ip !== null ? 'focus:focus:shadow-[inset_0_-2px_0_0_#a3e635]' : 'focus:shadow-[inset_0_-2px_0_0_#ef4444]')}
+          id={generatedId}
+          value={value}
+          placeholder={placeholder}
+          onChange={handleChange}
+          maxLength={15}
+        />
+        {children}
+      </div>
+    </>
+  );
+}
+
+type OptionType = {
+  value: number;
+  label: string;
+};
+
+const options: OptionType[] = Array.from({ length: IP_MAX + 1 }, (_, i) => ({
+  value: i,
+  label: `${i}`,
+}));
+options.unshift({ value: -1, label: '' });
+
+type LenInputProps = {
+  mask: IntIPv4;
+  setMask: (v: IntIPv4) => void;
+};
+
+function Leninput({ mask, setMask }: LenInputProps) {
+  const [query, setQuery] = useState<string>('');
+  const [select, setSelect] = useState<OptionType>(null!)
+
+  function findOption(len: number) {
+    return options.find(o => o.value === len) ?? options[0];
+  }
+
+  useEffect(() => {
+    const select = findOption(lenFromMask(mask ?? -1) ?? -1)
+    setQuery(select.label)
+    setSelect(select);
+  }, [mask]);
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setQuery(e.target.value);
+    const inputVal = e.target.value;
+
+    if (inputVal.length === 0) {
+      setMask(null);
+      return;
+    }
+
+    const val = Number(inputVal);
+    setMask(isNaN(val) ? null : maskFromLen(val));
+  }
+
+  function handleSelect(op: OptionType | null) {
+    if (op === null) {
+      setSelect(options[0]);
+      setMask(null);
+      return;
+    }
+    setQuery(op.label);
+    setSelect(op);
+    setMask(maskFromLen(op.value));
+  }
+
+  return (
+    <>
+      <Input
+        type='text'
+        autoComplete='off'
+        className={clsx('input-len', 'outline-none bg-transparent', mask !== null ? 'focus:focus:shadow-[inset_0_-2px_0_0_#a3e635]' : 'focus:shadow-[inset_0_-2px_0_0_#ef4444]')}
+        value={query}
+        placeholder='24'
+        onChange={handleInputChange}
+        maxLength={2}
+      />
+      <Listbox
+        value={select}
+        onChange={handleSelect}
+      >
+        <ListboxButton>
+          <ChevronDownIcon className='size-5' />
+        </ListboxButton>
+        <ListboxOptions className='options'>
+          {options.filter(op => op.value !== -1).map(op =>
+            <ListboxOption
+              className='group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10'
+              key={op.value}
+              value={op}
+            >
+              <CheckIcon className='invisible size-4 group-data-selected:visible' />
+              {op.label}
+            </ListboxOption>
+          )}
+        </ListboxOptions>
+      </Listbox>
+    </>
+  );
+}
+
+function MutualInputBox({ ipHook }: { ipHook: ReturnType<typeof useIpv4State> }) {
+  return (
+    <div className='mutual-box'>
+      <TextInput
+        className='input-ip'
+        label='IP Address'
+        placeholder='192.168.0.1'
+        ip={ipHook.ip}
+        setIp={ipHook.setIp}
+      >
+        <div className='h-full flex items-center gap-1 pr-1'>
+          <SlashIcon className='size-5' />
+          <Leninput mask={ipHook.mask} setMask={ipHook.setMask} />
+        </div>
+      </TextInput>
+      <TextInput
+        className='input-mask'
+        label='Subnet Mask'
+        ip={ipHook.mask}
+        setIp={ipHook.setMask}
+        placeholder='255.255.255.0'
+      />
     </div>
-  )
+  );
+}
+
+function MutualCommunication() {
+  const ipHooks = [useIpv4State(), useIpv4State()];
+
+  const canCommunicate: boolean | null = useMemo(() => {
+    if (
+      ipHooks[0].ip === null ||
+      ipHooks[1].ip === null ||
+      ipHooks[0].mask === null ||
+      ipHooks[1].mask === null
+    )
+      return null;
+    return (
+      (ipHooks[0].ip & ipHooks[1].mask) ===
+      networkFromIpMask(ipHooks[1].ip!, ipHooks[1].mask!) &&
+      (ipHooks[1].ip & ipHooks[0].mask) ===
+      networkFromIpMask(ipHooks[0].ip!, ipHooks[0].mask!)
+    );
+  }, [ipHooks[0].ip, ipHooks[1].ip, ipHooks[0].mask, ipHooks[1].mask]);
+
+  return (
+    <div className='flex h-full w-full flex-col items-center justify-center'>
+      <div className='flex gap-4'>
+        {ipHooks.map((ipHook, i) => (
+          <div key={`box-${i}`}>
+            <p className='text-center'>IP {i + 1}</p>
+            <MutualInputBox ipHook={ipHook} />
+          </div>
+        ))}
+      </div>
+      <div className='h-4'>
+        {canCommunicate !== null && <p className={clsx(canCommunicate ? 'text-lime-400' : 'text-red-400')}>{canCommunicate ? '通信可能' : '通信不可能'}</p>}
+      </div>
+    </div>
+  );
 }
 
 export default function App() {
-  const [files, setFiles] = useState<any[]>([]);
   return (
-    <div className="h-screen w-screen flex">
-      <DropArea setFiles={setFiles} />
-      <div className="w-[50vw] h-screen">
-        {files.length !== 0 && files.map((f, i) => (
-          <li key={i}>{f.webkitRelativePath}</li>
-        ))}
-      </div>
+    <div className='bg-bgclr text-txclr h-full w-full transition-colors duration-300'>
+      <MutualCommunication />
     </div>
-  )
+  );
 }

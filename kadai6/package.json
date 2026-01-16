@@ -7,6 +7,8 @@
     "start": "tsx src/api/server.tsx"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
+    "@heroicons/react": "^2.2.0",
     "clsx": "^2.1.1",
     "express": "^5.2.1",
     "fast-glob": "^3.3.3",

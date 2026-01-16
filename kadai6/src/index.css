@@ -1,1 +1,62 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+html {
+  font-size: 20px;
+}
+
+:root {
+  --bg: #fefce8;
+  --clr: #000000;
+  --input-border: hsl(from var(--clr) h s calc(l + 27));
+  --input-placeholder: hsl(from var(--clr) h s calc(l + 50));
+}
+
+@theme {
+  --color-bgclr: var(--bg);
+  --color-txclr: var(--clr);
+  --color-input-border: var(--input-border);
+  --color-input-placeholder: var(--input-placeholder);
+  --spacing-input-h: 2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1e2939;
+    --clr: #ffffff;
+    --input-border: hsl(from var(--clr) h s calc(l - 20));
+    --input-placeholder: hsl(from var(--clr) h s calc(l - 40));
+  }
+}
+
+#wrapper {
+  @apply bg-bgclr text-txclr h-full w-full transition-colors duration-300;
+}
+
+.input-wrap {
+  @apply border-input-border mb-2 h-fit w-fit border;
+}
+
+.input-wrap:has(.input-len) {
+  @apply relative flex items-center;
+}
+
+.input-ip {
+  @apply placeholder-input-placeholder h-input-h w-32 py-0.5 pl-2.5;
+}
+
+.input-len {
+  @apply h-input-h w-5;
+}
+
+.input-mask {
+  @apply placeholder-input-placeholder h-input-h w-50 px-2.5 py-0.5;
+}
+
+.options {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  @apply bg-bgclr border-input-border absolute top-0 right-0 h-[30vh] overflow-y-scroll border outline-none;
+}
+.options::-webkit-scrollbar {
+  display: none;
+}
