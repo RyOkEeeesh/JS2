@@ -19,7 +19,7 @@ Expand-Archive node06_15_加地良寅.zip -DestinationPath .
 curl  -L -o node06_15_加地良寅.zip https://github.com/RyOkEeeesh/JS2/releases/latest/download/kadai6.zip
 
 # 解凍
-unzip node06_15_加地良寅.zip -DestinationPath .
+unzip node06_15_加地良寅.zip
 ```
 ### その他
 直接[ここ](https://github.com/RyOkEeeesh/JS2/releases)からダウンロード
