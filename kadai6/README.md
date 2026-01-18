@@ -7,7 +7,6 @@ CSSのフレームワークに、[Tailwind CSS](https://tailwindcss.com/) を用
 
 ## セットアップ
 ### windows
-
 ```bash
 # ZIP をダウンロード
 Invoke-WebRequest https://github.com/RyOkEeeesh/JS2/releases/latest/download/kadai6.zip -OutFile node06_15_加地良寅.zip
@@ -22,6 +21,8 @@ curl  -L -o node06_15_加地良寅.zip https://github.com/RyOkEeeesh/JS2/release
 # 解凍
 unzip node06_15_加地良寅.zip -DestinationPath .
 ```
+### その他
+直接[ここ](https://github.com/RyOkEeeesh/JS2/releases)からダウンロード
 ### 共通
 ```bash
 cd kadai6
