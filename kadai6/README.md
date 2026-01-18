@@ -7,22 +7,24 @@ CSSのフレームワークに、[Tailwind CSS](https://tailwindcss.com/) を用
 
 ## セットアップ
 ### windows
+
 ```bash
 # ZIP をダウンロード
-Invoke-WebRequest https://github.com/RyOkEeeesh/JS2/tree/main/kadai6/releases/latest/download/kadai06.zip -OutFile node06_15_加地良寅.zip
+Invoke-WebRequest https://github.com/RyOkEeeesh/JS2/releases/latest/download/kadai6.zip -OutFile node06_15_加地良寅.zip
 # 解凍
 Expand-Archive node06_15_加地良寅.zip -DestinationPath .
 ```
 ### mac linux
 ```bash
 # ZIP をダウンロード
-curl  -L -o node06_15_加地良寅.zip https://github.com/RyOkEeeesh/JS2/tree/main/kadai6/releases/latest/download/kadai06.zip
+curl  -L -o node06_15_加地良寅.zip https://github.com/RyOkEeeesh/JS2/releases/latest/download/kadai6.zip
+
 # 解凍
 unzip node06_15_加地良寅.zip -DestinationPath .
 ```
 ### 共通
 ```bash
-cd node06_15_加地良寅.zip
+cd kadai6
 npm i
 ```
 ## 起動
