@@ -36,12 +36,6 @@ export async function getCtxBuildJS() {
   return ctx;
 }
 
-export async function watchJS() {
-  const ctx = await getCtxBuildJS();
-  await ctx.watch();
-  return ctx;
-}
-
 export function watchCSSFiles() {
   fs.watch(env.in.dir, { recursive: true }, async (_, filename) => {
     if (!filename) return;

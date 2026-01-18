@@ -25,7 +25,7 @@ app.get('/', (_, res) => {
 liveReloadServer.server.once("connection", () => {
   setTimeout(() => {
     liveReloadServer.refresh("/");
-  }, 100);
+  }, 150);
 });
 
 app.listen(env.port, () => console.log(`http://localhost:${env.port}`));
