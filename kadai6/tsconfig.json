@@ -7,9 +7,8 @@
     "jsx": "react-jsx",
     "lib": ["dom", "esnext"],
     "strict": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       "env": ["./env.ts"]
     }
   }

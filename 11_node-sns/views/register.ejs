@@ -1,0 +1,49 @@
+<div
+  class="flex items-center justify-center min-h-screen bg-slate-100">
+  <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-2xl shadow-xl m-4">
+    <div class="text-center">
+      <div class="flex justify-center items-center gap-2 mb-4">
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">
+          Sign Up
+        </h1>
+      </div>
+    </div>
+
+    <form action="/register" method="post" class="space-y-4">
+      <div>
+        <input type="text" id="name" name="name" value="<%= locals.input?.name || '' %>"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          placeholder="名前">
+      </div>
+
+      <div>
+        <input type="email" id="email" name="email" value="<%= locals.input?.email || '' %>"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          placeholder="email@example.com">
+      </div>
+
+      <div>
+        <input type="password" id="password" name="password"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          placeholder="6文字以上のパスワード">
+      </div>
+
+      <div>
+        <input type="password" id="confirm_password" name="confirm_password"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          placeholder="パスワード（確認）">
+      </div>
+
+      <%- include('components/errorMessage', { error: locals.error || null }) %>
+
+      <button type="submit"
+        class="w-full bg-sky-600 text-white py-2 rounded-md font-semibold hover:bg-sky-700 transition">
+        Sign Up
+      </button>
+    </form>
+
+    <p class="text-center text-sm text-gray-500 mt-4">
+      すでにアカウントをお持ちの方は
+      <a href="/login" class="text-sky-600 hover:text-sky-700 font-medium">ログイン</a>
+    </p>
+  </div>
