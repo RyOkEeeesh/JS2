@@ -9,22 +9,22 @@ export const loginValidationRules = [
 
 // TODO:バリデーションルール：ユーザ登録用
 export const registerValidationRules = [
-    // body('name').notEmpty().withMessage('名前を正しく入力してください'),
-    // body('email').isEmail().withMessage('Emailを正しく入力してください')
-    //     .custom(async (value) => {
-    //         // Email重複チェック
-    //         const user = await userModel.findByEmail(value);
-    //         if (user) {
-    //             throw new Error('Emailは既に登録されています');
-    //         }
-    //     }),
-    // body('password').isLength({ min: 6 }).withMessage('パスワードは6文字以上で入力してください'),
-    // body('confirm_password').custom((value, { req }) => {
-    //     if (value !== req.body.password) {
-    //         return false;
-    //     }
-    //     return true;
-    // }).withMessage('確認用パスワードが一致しません'),
+    body('name').notEmpty().withMessage('名前を正しく入力してください'),
+    body('email').isEmail().withMessage('Emailを正しく入力してください')
+        .custom(async (value) => {
+            // Email重複チェック
+            const user = await userModel.findByEmail(value);
+            if (user) {
+                throw new Error('Emailは既に登録されています');
+            }
+        }),
+    body('password').isLength({ min: 6 }).withMessage('パスワードは6文字以上で入力してください'),
+    body('confirm_password').custom((value, { req }) => {
+        if (value !== req.body.password) {
+            return false;
+        }
+        return true;
+    }).withMessage('確認用パスワードが一致しません'),
 ];
 
 // バリデーションミドルウェア

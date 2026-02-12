@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mysql:8
+    container_name: local-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: node_sns
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+volumes:
+  mysqldata:

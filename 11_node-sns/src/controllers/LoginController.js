@@ -24,19 +24,17 @@ export const auth = async (req, res) => {
     // ログイン失敗
     if (!user) {
         // TODO: セッション登録
-        // req.session.input = { email };
-        // req.session.errors = ["メールアドレスとパスワードが間違っています。"];
+        req.session.input = { email };
+        req.session.errors = ["メールアドレスとパスワードが間違っています。"];
         return res.redirect("/login");
     }
 
     // ログイン成功
     // TODO: ユーザセッション登録: req.session.authUser
+    req.session.authUser = user;
 
     // JWT: アクセストークン: Cookie保存
-    // authService.setAuthCookies(res, accessToken, refreshToken);
-
-    // JWT: リフレッシュトークンDB更新
-    // await userModel.updateRefreshToken(user.id, refreshToken);
+    authService.setAuthCookies(res, accessToken, refreshToken);
 
     // セッションクリア
     req.session.errors = [];
@@ -49,6 +47,7 @@ export const auth = async (req, res) => {
 // ログアウト
 export const logout = async (req, res) => {
     const user = req.session?.authUser;
+    // セッションにログインユーザーがなければ/loginへリダイレクト
     if (!user) return res.redirect("/login");
 
     // 1. DBのリフレッシュトークンを消去
